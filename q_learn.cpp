@@ -3,28 +3,32 @@
 #include "c_print.cpp"
 
 
+// 数组结构体
 struct array_int
 {
     int* array;
     int tail_index=-1;
 };
 
+// 数据添加元素
 void array_int_append(array_int* array, int value){
     array->array[array->tail_index+1] = value;
     array->tail_index++;
 }
 
+// 根据索引获取元素
 int array_int_get_by_index(array_int* array, int index){
     return array->array[index];
 }
 
 
-
+// 随机int
 int rand_int(int start, int end){
     int ret = rand()%(end-start) + start;
     return ret;
 }
 
+// 随机float
 float rand_float(float start, float end){
     float s = 1.*rand() / RAND_MAX;
     float ret = (end - start) * s + start;
@@ -32,6 +36,7 @@ float rand_float(float start, float end){
 };
 
 
+// 打印矩阵
 void print_float_matrix(float** arr, int rows, int cols){
     for(int ri=0; ri<rows; ri++){
         for(int ci=0; ci<cols; ci++){
@@ -41,6 +46,7 @@ void print_float_matrix(float** arr, int rows, int cols){
     }
 }
 
+// 打印矩阵
 void print_int_matrix(int** arr, int rows, int cols){
     for(int ri=0; ri<rows; ri++){
         for(int ci=0; ci<cols; ci++){
@@ -52,6 +58,7 @@ void print_int_matrix(int** arr, int rows, int cols){
 }
 
 
+// Q学习
 void q_learn(int** adj_matrix, float** returns_matrix, float** Q, int start_states, int end_states, int rows, int cols, int epochs){
 
     // 选择随机动作的概率
@@ -110,6 +117,7 @@ void q_learn(int** adj_matrix, float** returns_matrix, float** Q, int start_stat
 }
 
 
+// 打印路径
 void show_route(float** Q, int start_state, int end_state, int rows, int cols){
     int state = start_state;
     print_s("Best Route");
@@ -132,7 +140,7 @@ void show_route(float** Q, int start_state, int end_state, int rows, int cols){
 
 
 void run(){
-
+    
     // /*
     // map
     //     0---1---
@@ -141,6 +149,7 @@ void run(){
     //         |   |
     //         4---
     // */
+    // 地图构建
     // int rows = 6;
     // int cols = 6;
     // // 邻接矩阵
@@ -173,6 +182,7 @@ void run(){
             |   |
             4---6---7
     */
+    // 地图构建
     int rows = 8;
     int cols = 8;
     // 邻接矩阵
@@ -227,20 +237,23 @@ void run(){
         Q[ri] = Q_[ri];
     }
 
+    // 算法执行
     q_learn(adj_matrix, returns_matrix, Q, start_state, end_state, rows, cols, 10);
 
+    // 打印Q表
     print_s("Q table");
     print_float_matrix(Q, rows, cols);
     print_n();
+    // 打印路径
+    printf("Start: %d\n  End: %d\n", start_state, end_state);
+    print_n();
     show_route(Q, start_state, end_state, rows, cols);
+    print_n();
 }
 
 
-
 int main(){
-
     run();
-
     return 0;
 }
 
