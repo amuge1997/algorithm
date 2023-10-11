@@ -62,7 +62,6 @@ void q_learn(int** adj_matrix, float** returns_matrix, float** Q, int start_stat
 
     // 迭代
     for(int i=0;i<epochs;i++){
-        // 随机选取状态s
         int state = start_states;
         while(state != end_states){
             int select_a;
