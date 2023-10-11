@@ -58,7 +58,7 @@ struct grid_list{
 
 void print_grid(grid the_grid);
 
-// 根据f值对列表排序
+// 快速排序, 根据f值对列表排序
 void list_sort_(grid** arr, int len){
     grid* first = arr[0];
 
@@ -89,7 +89,7 @@ void list_sort_(grid** arr, int len){
     }
 }
 
-// 根据f值对列表排序
+// 快速排序, 根据f值对列表排序
 void list_sort_by_f(grid_list* list){
     if(list->tail_index > 0){
         list_sort_(list->array, list->tail_index+1);
