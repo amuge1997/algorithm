@@ -1,7 +1,7 @@
 import numpy as np
 
 # 固定随机种子
-np.random.seed(1)
+np.random.seed(0)
 
 
 # 卡尔曼滤波
@@ -24,33 +24,32 @@ def KF(x, z, A, P, Q, R, H):
 
     x_new = x_predict + K @ (z - H @ x_predict)
     P_new = ((np.identity(rank)) - K @ H) @ P_predict
+
     return x_new, P_new, x_predict
 
 
 # 仿真环境
 class Simulate:
-    def __init__(self, x_init, A, P, H, R):
+    def __init__(self, x_init, A, Q, H, R):
         self.x_real = [x_init]
         self.z_real = []
         self.z_noise = []
         self.A = A
-        self.P = P
+        self.Q = Q
         self.R = R
         self.H = H
 
     # 初始状态
     def x_start(self):
         x_this = self.x_real[-1]
-        x_this_noise = np.random.multivariate_normal(x_this.reshape(-1), self.P).reshape(-1, 1)
-        return x_this_noise
+        return x_this
 
     # 状态步进
     def x_step(self):
         x_this = self.x_real[-1]
-        # x_next_noise = self.A @ x_this
-        x_next_noise = np.random.multivariate_normal((self.A @ x_this).reshape(-1), self.P).reshape(-1, 1)
-        self.x_real.append(x_next_noise)
-        return x_next_noise
+        x_next_real = np.random.multivariate_normal((self.A @ x_this).reshape(-1), self.Q).reshape(-1, 1)
+        self.x_real.append(x_next_real)
+        return x_next_real
 
     # 观测步进
     def z_step(self):
@@ -94,19 +93,19 @@ def run():
     # 误差协方差
     P = np.array([
         [1.0**2, 0],
-        [0, 0.2**2],
+        [0, 1.0**2],
     ])
 
     # 过程噪声协方差
     Q = np.array([
-        [1.0**2, 0],
-        [0, 0.2**2]
+        [0.1**2, 0],
+        [0, 0.1**2]
     ])
 
     # 测量噪声协方差
     R = np.array([
-        [1.0**2, 0],
-        [0, 0.2**2],
+        [0.5**2, 0],
+        [0, 0.5**2],
     ])
 
     # 测量矩阵
@@ -122,7 +121,7 @@ def run():
     ])
     
     # 仿真环境初始化
-    sim = Simulate(x_real_init, A, P, H, R)
+    sim = Simulate(x_real_init, A, Q, H, R)
 
     x_old = sim.x_start()
     A_old = A
