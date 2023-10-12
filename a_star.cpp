@@ -148,6 +148,14 @@ void print_grid_list(grid_list* list){
     }
 }
 
+// 打印网格列表
+void print_grid_list_pos(grid_list* list){
+    for(int i=0; i<list->tail_index+1; i++){
+        grid the_grid = *(list->array[i]);
+        printf("(y,x): (%d,%d)\n", the_grid.pos.y, the_grid.pos.x);
+    }
+}
+
 
 // 探索附近网格
 void find_near_grid(
@@ -209,7 +217,7 @@ void a_star(
     grid** the_grid_map,
     position start_position, 
     position target_position, 
-    int rows, int cols, int max_epochs,
+    int rows, int cols,
     grid_list* lines
     ){
 
@@ -239,7 +247,7 @@ void a_star(
     
     // 开始执行
     grid* result_grid = NULL;
-    for(int i=0;i<max_epochs;i++){
+    while(-1 != open_list.tail_index){
         // 取出f最小值的网格
         grid* this_grid = list_get_by_index(&open_list, 0);
         list_remove_by_index(&open_list, 0);
@@ -248,7 +256,7 @@ void a_star(
         // 探索周围网格
         find_near_grid(the_grid_map, this_grid, target_position, &open_list, &close_list, rows, cols);
         list_sort_by_f(&open_list);
-        
+
         // 判断目标网格是否出现
         for(int j=0;j<open_list.tail_index+1;j++){
             grid* temp = open_list.array[j];
@@ -292,7 +300,7 @@ void show_route(grid_list* lines){
 
 
 void run(){
-    // 地图构建
+    // 地图构建1
     // int rows = 7;
     // int cols = 7;
     // int the_map_temp[rows][cols] = {
@@ -307,20 +315,36 @@ void run(){
     // position start_position = {0, 0};
     // position target_position = {6, 6};
 
-    // 地图构建
+    // // 地图构建2
+    // int rows = 7;
+    // int cols = 7;
+    // int the_map_temp[rows][cols] = {
+    //     {0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 1, 1, 1, 0, 0},
+    //     {0, 0, 0, 0, 1, 0, 0},
+    //     {0, 0, 1, 1, 1, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0},
+    // };
+    // position start_position = {3, 1};
+    // position target_position = {3, 5};
+
+    // 地图构建3
     int rows = 7;
     int cols = 7;
     int the_map_temp[rows][cols] = {
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 1, 1, 1, 0, 0},
-        {0, 0, 0, 0, 1, 0, 0},
-        {0, 0, 1, 1, 1, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 1, 0},
+        {0, 1, 1, 1, 1, 1, 0},
+        {0, 1, 0, 0, 0, 1, 0},
+        {0, 1, 0, 1, 0, 1, 0},
+        {0, 1, 0, 1, 0, 1, 0},
+        {0, 1, 0, 1, 0, 1, 0},
+        {0, 0, 0, 1, 0, 0, 0},
     };
-    position start_position = {3, 1};
-    position target_position = {3, 5};
+    position start_position = {0, 0};   // 左上角
+    position target_position = {0, 6};  // 右上角
+
 
     int* the_map[rows];
     for(int ri=0;ri<rows;ri++){
@@ -339,8 +363,8 @@ void run(){
     grid* lines_list_temp[1000];
     grid_list lines;
     lines.array = lines_list_temp;
-    a_star(the_grid_map, start_position, target_position, rows, cols, 20, &lines);
-
+    a_star(the_grid_map, start_position, target_position, rows, cols, &lines);
+    
     // 展示路径
     printf("Start: (%d,%d)\n  End: (%d,%d)\n", start_position.y, start_position.x, target_position.y, target_position.x);
     print_n();
