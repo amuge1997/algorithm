@@ -13,7 +13,10 @@ def score(fea1, fea2):
 # 目标追踪
 def target_detect(frames, target_info):
 
-    his_range = 20
+    # 粒子数
+    sample_nums = 100
+    # RGB各通道特征向量维度
+    his_range = 4
     
     # 目标RGB特征
     features = rgb_histogram(target_info['image'], range_=his_range, is_show=False).reshape(-1)
@@ -26,23 +29,30 @@ def target_detect(frames, target_info):
     std_y = target_info['range_y'] / 2
     std_x = target_info['range_x'] / 2
 
-    # 粒子数
-    sample_nums = 50
     result_ims = []
+    record_yx = [{'y': mean_y, 'x': mean_x}]
     for i, frame in enumerate(frames):
         print('processing frame: {} / {}'.format(i+1, len(frames)))
 
         y_up_bound = frame.shape[0]
         x_up_bound = frame.shape[1]
+
+        # 线性预测
+        if len(record_yx) >= 2:
+            offset_y = record_yx[-1]['y'] - record_yx[-2]['y']
+            offset_x = record_yx[-1]['x'] - record_yx[-2]['x']
+        else:
+            offset_y = 0
+            offset_x = 0
         
         # 采样
-        sample_y = n.random.randn(sample_nums) * std_y + mean_y
-        sample_x = n.random.randn(sample_nums) * std_x + mean_x
+        sample_y = n.random.randn(sample_nums) * std_y + (mean_y + offset_y)
+        sample_x = n.random.randn(sample_nums) * std_x + (mean_x + offset_x)
         samples_yx = n.concatenate((sample_y.reshape(-1, 1), sample_x.reshape(-1, 1)), axis=1)
 
-        samples_sco = []
+        samples_scores = []
         for yx in samples_yx:
-
+            
             y_low = yx[0] - 0.5*range_y if yx[0] - 0.5*range_y > 1 else 0
             y_up = yx[0] + 0.5*range_y if yx[0] + 0.5*range_y < y_up_bound - 1 else y_up_bound - 1
 
@@ -56,11 +66,11 @@ def target_detect(frames, target_info):
 
             # 度量得分
             sco = score(features, samples_fea)
-            samples_sco.append(sco)
+            samples_scores.append(sco)
 
         # 根据得分计算融合权重
-        samples_sco = n.array(samples_sco)**5
-        weighs = samples_sco / samples_sco.sum()
+        samples_scores = n.array(samples_scores)**2
+        weighs = samples_scores / samples_scores.sum()
         
         # 融合得到新的位置估计
         new_yx = n.sum(weighs.reshape(-1, 1) * samples_yx, axis=0)
@@ -68,13 +78,15 @@ def target_detect(frames, target_info):
         mean_y = new_yx[0]
         mean_x = new_yx[1]
 
+        record_yx.append({'y': mean_y, 'x': mean_x})
+
         # 将结果绘制到该帧
         im = draw_on_frame(frame, (mean_y, mean_x), range_yx=(range_y, range_x))
         result_ims.append(im)
     return result_ims
 
 
-# 从第一帧手动截取目标图像
+# 从第一帧截取目标图像
 def find_first_target(first):
     start_x, start_y = 320, 280
     range_x, range_y = 90, 120
