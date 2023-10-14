@@ -25,7 +25,7 @@ struct grid
 };
 
 
-// 距离计算,h哈密顿距离,o欧式距离
+// 距离计算,h曼哈顿距离,o欧式距离
 float distance(position p1, position p2, char mode){
     float ret;
     if(mode == 'o'){
