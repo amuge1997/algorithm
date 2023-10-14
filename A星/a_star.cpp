@@ -315,35 +315,35 @@ void run(){
     // position start_position = {0, 0};
     // position target_position = {6, 6};
 
-    // // 地图构建2
-    // int rows = 7;
-    // int cols = 7;
-    // int the_map_temp[rows][cols] = {
-    //     {0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 1, 1, 1, 0, 0},
-    //     {0, 0, 0, 0, 1, 0, 0},
-    //     {0, 0, 1, 1, 1, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0},
-    // };
-    // position start_position = {3, 1};
-    // position target_position = {3, 5};
-
-    // 地图构建3
+    // 地图构建2
     int rows = 7;
     int cols = 7;
     int the_map_temp[rows][cols] = {
-        {0, 0, 0, 0, 0, 1, 0},
-        {0, 1, 1, 1, 1, 1, 0},
-        {0, 1, 0, 0, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0},
-        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 1, 1, 1, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0},
+        {0, 0, 1, 1, 1, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
     };
-    position start_position = {0, 0};   // 左上角
-    position target_position = {0, 6};  // 右上角
+    position start_position = {3, 1};
+    position target_position = {3, 5};
+
+    // // 地图构建3
+    // int rows = 7;
+    // int cols = 7;
+    // int the_map_temp[rows][cols] = {
+    //     {0, 0, 0, 0, 0, 1, 0},
+    //     {0, 1, 1, 1, 1, 1, 0},
+    //     {0, 1, 0, 0, 0, 1, 0},
+    //     {0, 1, 0, 1, 0, 1, 0},
+    //     {0, 1, 0, 1, 0, 1, 0},
+    //     {0, 1, 0, 1, 0, 1, 0},
+    //     {0, 0, 0, 1, 0, 0, 0},
+    // };
+    // position start_position = {0, 0};   // 左上角
+    // position target_position = {0, 6};  // 右上角
 
 
     int* the_map[rows];
