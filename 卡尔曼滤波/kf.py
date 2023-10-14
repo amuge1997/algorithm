@@ -1,7 +1,7 @@
 import numpy as np
 
 # 固定随机种子
-np.random.seed(0)
+np.random.seed(1024)
 
 
 # 卡尔曼滤波
@@ -149,22 +149,26 @@ def run():
     x_new_record = np.concatenate(x_new_record, axis=1)
     x_predict_record = np.concatenate(x_predict_record, axis=1)
 
+    linewidth = 1.8
+
     import matplotlib.pyplot as plt
     # 绘制位置
     plt.figure()
-    plt.plot(np.array(sim.x_real[1:])[:, 0, 0], label='x real', c='black')
-    plt.plot(z_new_noise_record[0, :], label='x meansure', c='orange')
-    plt.plot(x_predict_record[0, :], label='x predict', c='green')
-    plt.plot(x_new_record[0, :], label='x fusion', c='blue')
+    plt.title('Position')
+    plt.plot(np.array(sim.x_real[1:])[:, 0, 0], label='x real', c='black', linewidth=linewidth)
+    plt.plot(z_new_noise_record[0, :], label='x meansure', c='orange', linewidth=linewidth)
+    plt.plot(x_predict_record[0, :], label='x predict', c='green', linewidth=linewidth)
+    plt.plot(x_new_record[0, :], label='x fusion', c='blue', linewidth=linewidth)
     plt.legend()
     plt.grid()
 
     # 绘制速度
     plt.figure()
-    plt.plot(np.array(sim.x_real[1:])[:, 1, 0], label='v real', c='black')
-    plt.plot(z_new_noise_record[1, :], label='v meansure', c='orange')
-    plt.plot(x_predict_record[1, :], label='v predict', c='green')
-    plt.plot(x_new_record[1, :], label='v fusion', c='blue')
+    plt.title('Velocity')
+    plt.plot(np.array(sim.x_real[1:])[:, 1, 0], label='v real', c='black', linewidth=linewidth)
+    plt.plot(z_new_noise_record[1, :], label='v meansure', c='orange', linewidth=linewidth)
+    plt.plot(x_predict_record[1, :], label='v predict', c='green', linewidth=linewidth)
+    plt.plot(x_new_record[1, :], label='v fusion', c='blue', linewidth=linewidth)
     plt.legend()
     plt.grid()
 
