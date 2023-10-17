@@ -53,14 +53,14 @@ def sa(dis_matrix, init_temp, rate, epochs):
 
 # 绘图
 def draw(position, solution):
-    path_y = [position[i, 0] for i in solution]
-    path_x = [position[i, 1] for i in solution]
+    path_y = [position[i, 0] for i in solution] #+ [position[solution[0], 0]]
+    path_x = [position[i, 1] for i in solution] #+ [position[solution[0], 1]]
     plt.plot(path_x, path_y, color='r', linestyle='-', linewidth=2, label='Path')
 
     # 绘制点
     plt.scatter(position[:, 1], position[:, 0], color='b', marker='o', label='Points')
     plt.grid()
-    # plt.axis('off')
+
     plt.show()
 
 
@@ -83,7 +83,7 @@ def run():
 
     # 参数设置
     init_temp = 100.0
-    rate = 0.99
+    rate = 0.98
     epochs = 1000
 
     # 运行模拟退火算法
