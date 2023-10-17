@@ -136,7 +136,7 @@ def spread(result, decomposition_map, start_yx, next_number):
         finished.append(this)
 
 
-# 区域添加需要
+# 区域添加序号
 def add_area_number(decomposition_map):
     rows, cols = decomposition_map.shape
 
