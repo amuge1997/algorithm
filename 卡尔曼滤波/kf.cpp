@@ -141,7 +141,7 @@ class Simulate{
 template<
 typename T
 >
-void save(const string file_name, const T& data){
+void save(const string& file_name, const T& data){
     ofstream out(file_name);
     if (out.is_open()) {
         for (const VectorXf& vector : data) {
