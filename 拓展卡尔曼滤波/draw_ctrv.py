@@ -23,13 +23,33 @@ def run():
 
     import matplotlib.pyplot as plt
     # 绘制位置
-
+    plt.figure()
+    plt.title('Position')
     plt.plot(now_real_x[0, :], now_real_x[1, :], linewidth=linewidth, label='real', c='black')
     plt.plot(now_z[0, :], now_z[1, :], linewidth=linewidth, label='meansure', c='orange')
     plt.plot(predict_x[0, :], predict_x[1, :], linewidth=linewidth, label='predict', c='green')
     plt.plot(now_x[0, :], now_x[1, :], linewidth=linewidth, label='fusion', c='blue')
     plt.legend()
     plt.grid()
+
+    plt.figure()
+    plt.title('X')
+    plt.plot(now_real_x[0, :], linewidth=linewidth, label='real', c='black')
+    plt.plot(now_z[0, :], linewidth=linewidth, label='meansure', c='orange')
+    plt.plot(predict_x[0, :], linewidth=linewidth, label='predict', c='green')
+    plt.plot(now_x[0, :], linewidth=linewidth, label='fusion', c='blue')
+    plt.legend()
+    plt.grid()
+
+    plt.figure()
+    plt.title('Y')
+    plt.plot(now_real_x[1, :], linewidth=linewidth, label='real', c='black')
+    plt.plot(now_z[1, :], linewidth=linewidth, label='meansure', c='orange')
+    plt.plot(predict_x[1, :], linewidth=linewidth, label='predict', c='green')
+    plt.plot(now_x[1, :], linewidth=linewidth, label='fusion', c='blue')
+    plt.legend()
+    plt.grid()
+
     plt.show()
 
 
