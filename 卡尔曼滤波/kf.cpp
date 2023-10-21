@@ -71,7 +71,6 @@ class Simulate{
     ){
         this->x_real.push_back(init_x);
         this->A = A;
-        this->P = P;
         this->Q = Q;
         this->H = H;
         this->R = R;
@@ -128,7 +127,6 @@ class Simulate{
     vector<Z_type> z_noise;
 
     A_type A;
-    Trans_Noise_type P;
     Trans_Noise_type Q;
 
     H_type H;
