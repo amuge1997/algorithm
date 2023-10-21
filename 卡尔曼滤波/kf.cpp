@@ -25,43 +25,32 @@ typename H_type,
 typename Meansure_Noise_type
 >
 tuple<X_type, Trans_Noise_type, X_type> kalmanFilter(
-    const X_type& old_x,      // 当前状态估计
-    const A_type& A,            // 状态转移矩阵
-    const Trans_Noise_type& P,                 // 状态协方差矩阵
-    const Trans_Noise_type& Q,                 // 过程噪声协方差矩阵
+    const X_type& old_x,            // 当前状态估计
+    const A_type& A,                // 状态转移矩阵
+    const Trans_Noise_type& P,      // 状态协方差矩阵
+    const Trans_Noise_type& Q,      // 过程噪声协方差矩阵
 
-    const Z_type& now_z,       // 当前测量值
-    const H_type& H,
-    const Meansure_Noise_type& R)                 // 测量噪声协方差矩阵
+    const Z_type& now_z,            // 当前测量值
+    const H_type& H,                // 测量矩阵
+    const Meansure_Noise_type& R)   // 测量噪声协方差矩阵
 {
-    // 预测步骤
+    // 预测
     X_type now_predict_x = A * old_x;
     Trans_Noise_type now_predict_P = A * P * A.transpose() + Q;
 
-    // 更新步骤
+    // 更新
     Matrix<float, old_x.rows(), now_z.rows()> K;
     K = now_predict_P * H.transpose() * (H * now_predict_P * H.transpose() + R).inverse();
-
     Trans_Noise_type im;
     im.setIdentity();
     X_type now_x = now_predict_x + K * (now_z - H * now_predict_x);
     Trans_Noise_type now_P = (im - K * H) * now_predict_P;
 
-    // print(now_predict_x);
-    // print('\n');
-    // print(now_predict_P);
-    // print('\n');
-    // print(now_z);
-    // print('\n');
-    // print(R);
-    // print('\n');
-    // print(K);
-    // print('\n');
-    // print(now_P);
-
     return make_tuple(now_x, now_P, now_predict_x);
 }
 
+
+// 仿真环境
 template<
 typename X_type, 
 typename A_type,
@@ -118,7 +107,6 @@ class Simulate{
         X_type now_x_temp = this->x_real[this->x_real.size() - 1];
         Z_type now_z_temp = this->H * now_x_temp;
 
-        // 生成符合过程噪声协方差矩阵的噪声向量
         normal_distribution<float> distribution(0.0, 1.0);
         Z_type noise;
         for (int i = 0; i < noise.size(); ++i) {
@@ -162,7 +150,6 @@ void save(const string file_name, const T& data){
             }
             out << "\n";
         }
-        // 关闭文件
         out.close();
         std::cout << "数据已写入文件 " << file_name << std::endl;
     } else {
