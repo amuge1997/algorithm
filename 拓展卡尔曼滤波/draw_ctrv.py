@@ -12,7 +12,6 @@ def read(name):
         return data
 
 
-
 def run():
     now_x = read('now_x.txt')
     now_z = read('now_z.txt')
