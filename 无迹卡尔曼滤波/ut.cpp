@@ -17,21 +17,21 @@ float UT_lambda = 1;        // 调节个样本点权重
 
 // sigma点
 template<
-typename State_type,
-typename StateMat_type,
-typename CovMat_type
+typename State,
+typename StateMat,
+typename CovMat
 >
 void ut_sigma_sample(
-    const State_type& state,
-    const CovMat_type& P,
-    StateMat_type& state_mat
+    const State& state,
+    const CovMat& P,
+    StateMat& state_mat
 ){
     const int dims = state.rows();
     const int samples_nums = dims*2 + 1;
     // 矩阵分解
-    LLT<CovMat_type> llt((dims*1.0 + UT_lambda) * P);
-    CovMat_type L = llt.matrixL();
-    State_type old_state_s = state;
+    LLT<CovMat> llt((dims*1.0 + UT_lambda) * P);
+    CovMat L = llt.matrixL();
+    State old_state_s = state;
     state_mat.col(0) = state;
     for(int i=0;i<dims;++i){
         old_state_s = state + L.col(i);
@@ -59,22 +59,22 @@ void ut_w(const int& dims, Weight_type& w){
 
 
 template<
-typename StateMat_type,
-typename State_type,
-typename CovMat_type,
+typename StateMat,
+typename State,
+typename CovMat,
 
-typename NewStateMat_type,
-typename NewState_type,
-typename NewCovMat_type
+typename NewStateMat,
+typename NewState,
+typename NewCovMat
 >
 void ut(
-    const State_type& old_state,     // 原状态
-    const CovMat_type& old_P,        // 原状态协方差矩阵
-    StateMat_type& old_state_mat,       // 原状态样本矩阵
-    NewState_type (*forward_function)(const State_type&),    // 转移函数
-    NewStateMat_type& new_state_mat,    // 新状态样本矩阵
-    NewState_type& new_state_mean,      // 新状态平均值
-    NewCovMat_type& new_P               // 新状态协方差矩阵
+    const State& old_state,     // 原状态
+    const CovMat& old_P,        // 原状态协方差矩阵
+    StateMat& old_state_mat,       // 原状态样本矩阵
+    NewState (*forward_function)(const State&),    // 转移函数
+    NewStateMat& new_state_mat,    // 新状态样本矩阵
+    NewState& new_state_mean,      // 新状态平均值
+    NewCovMat& new_P               // 新状态协方差矩阵
     ){
     
     const int dims = old_state.rows();
@@ -95,7 +95,7 @@ void ut(
     ut_sigma_sample(old_state, old_P, old_state_mat);
     
     // 状态转移
-    NewState_type new_state = forward_function(old_state_mat.col(0));
+    NewState new_state = forward_function(old_state_mat.col(0));
     new_state_mat.col(0) = new_state;
     for(int i=0;i<dims;++i){
         new_state = forward_function(old_state_mat.col(i+1));
@@ -110,7 +110,7 @@ void ut(
     new_state_mean = new_state_mat * w;
     new_P.setZero();
     for(int i=0;i<samples_nums;++i){
-        NewState_type ti = new_state_mat.col(i) - new_state_mean;
+        NewState ti = new_state_mat.col(i) - new_state_mean;
         float wi = w(i);
         new_P = new_P + wi * ti * ti.transpose();
     }

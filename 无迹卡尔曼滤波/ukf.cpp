@@ -19,34 +19,34 @@ void print(const T& t){
 
 // 无迹卡尔曼
 template<
-typename X_type, 
-typename Trans_Noise_type,
+typename State, 
+typename TransNoise,
 
-typename Z_type,
-typename Meansure_Noise_type
+typename Meansure,
+typename MeansureNoise
 >
-tuple<X_type, Trans_Noise_type, X_type> UnscentedKalmanFilter(
-    const X_type& old_x,            // 当前状态估计
-    const Trans_Noise_type& P,      // 状态协方差矩阵
-    const Trans_Noise_type& Q,      // 过程噪声协方差矩阵
+tuple<State, TransNoise, State> UnscentedKalmanFilter(
+    const State& old_x,             // 当前状态估计
+    const TransNoise& old_P,        // 状态协方差矩阵
+    const TransNoise& Q,            // 过程噪声协方差矩阵
 
-    const Z_type& now_z,            // 当前测量值
-    const Meansure_Noise_type& R,   // 测量噪声协方差矩阵
+    const Meansure& now_z,          // 当前测量值
+    const MeansureNoise& R,         // 测量噪声协方差矩阵
 
-    X_type (*forward_function)(const X_type&),              // 状态转移函数
-    Z_type (*meansure_function)(const X_type&)              // 观测函数
+    State (*forward_function)(const State&),        // 状态转移函数
+    Meansure (*meansure_function)(const State&)     // 观测函数
 ){  
     const int dims = old_x.rows();
     const int samples_nums = 2*dims + 1;
 
     // 预测步骤
-    X_type predict_x_noise_mean;
+    State predict_x_noise_mean;
     Matrix<float, old_x.rows(), samples_nums> old_x_mat;
     Matrix<float, predict_x_noise_mean.rows(), samples_nums> predict_x_mat;
-    Trans_Noise_type predict_x_noise_P;
+    TransNoise predict_x_noise_P;
     ut( 
         old_x, 
-        P, 
+        old_P, 
         old_x_mat, 
         forward_function, 
         predict_x_mat, 
@@ -56,41 +56,41 @@ tuple<X_type, Trans_Noise_type, X_type> UnscentedKalmanFilter(
     predict_x_noise_P = predict_x_noise_P + Q;
 
     // 观测步骤
-    Z_type predict_x2z_mean;
+    Meansure x2z_mean;
     Matrix<float, predict_x_noise_mean.rows(), samples_nums> predict_x_noise_ut_sample_mat;
-    Matrix<float, predict_x2z_mean.rows(), samples_nums> predict_x2z_mat;
-    Meansure_Noise_type predict_x2z_P;
+    Matrix<float, x2z_mean.rows(), samples_nums> x2z_mat;
+    MeansureNoise x2z_P;
     ut(
         predict_x_noise_mean, 
         predict_x_noise_P, 
         predict_x_noise_ut_sample_mat, 
         meansure_function,
-        predict_x2z_mat,
-        predict_x2z_mean,
-        predict_x2z_P
+        x2z_mat,
+        x2z_mean,
+        x2z_P
         );
-    Meansure_Noise_type S = predict_x2z_P + R;
+    MeansureNoise S = x2z_P + R;
 
     Vector<float, samples_nums> w;
     ut_w(dims, w);
-    Matrix<float, predict_x_noise_mean.rows(), samples_nums> Sigma_x;
-    Matrix<float, predict_x2z_mean.rows(), samples_nums> Sigma_z;
-    Sigma_x = predict_x_noise_ut_sample_mat.colwise() - predict_x_noise_mean;
+    Matrix<float, predict_x_noise_mean.rows(), samples_nums> sigma_x;
+    Matrix<float, x2z_mean.rows(), samples_nums> sigma_z;
+    sigma_x = predict_x_noise_ut_sample_mat.colwise() - predict_x_noise_mean;
     // Sigma_x = predict_x_mat.colwise() - predict_x_noise_mean;
-    Sigma_z = predict_x2z_mat.colwise() - predict_x2z_mean;
-    Matrix<float, predict_x_noise_mean.rows(), predict_x2z_mean.rows()> Sigma;
-    Sigma.setZero();
+    sigma_z = x2z_mat.colwise() - x2z_mean;
+    Matrix<float, predict_x_noise_mean.rows(), x2z_mean.rows()> sigma;
+    sigma.setZero();
     for(int i=0;i<samples_nums;++i){
-        Sigma = Sigma + w(i) * Sigma_x.col(i) * Sigma_z.col(i).transpose();
+        sigma = sigma + w(i) * sigma_x.col(i) * sigma_z.col(i).transpose();
     }
     
     // 卡尔曼增益
-    Matrix<float, predict_x_noise_mean.rows(), predict_x2z_mean.rows()> K;
-    K = Sigma * S.inverse();
+    Matrix<float, predict_x_noise_mean.rows(), x2z_mean.rows()> K;
+    K = sigma * S.inverse();
 
     // 融合
-    X_type new_x = predict_x_noise_mean + K * (now_z - predict_x2z_mean);
-    Trans_Noise_type new_P = predict_x_noise_P - K * S * K.transpose();
+    State new_x = predict_x_noise_mean + K * (now_z - x2z_mean);
+    TransNoise new_P = predict_x_noise_P - K * S * K.transpose();
 
     return make_tuple(new_x, new_P, predict_x_noise_mean);
 }
@@ -120,7 +120,7 @@ void run(){
 
     // 状态误差
     mat5x5f P = mat5x5f::Zero();
-    
+
     // 状态转移噪声
     mat5x5f Q;
     Q <<

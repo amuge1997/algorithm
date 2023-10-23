@@ -17,39 +17,40 @@ void print(const T& t){
 
 // 拓展卡尔曼滤波
 template<
-typename X_type, 
-typename Trans_Noise_type,
+typename State, 
+typename TransNoise,
 
-typename Z_type,
-typename H_type,
-typename Meansure_Noise_type
+typename Meansure,
+typename MeansureTrain,
+typename MeansureNoise
 >
-tuple<X_type, Trans_Noise_type, X_type> ExtendedKalmanFilter(
-    const X_type& old_x,            // 当前状态估计
-    const Trans_Noise_type& P,      // 状态协方差矩阵
-    const Trans_Noise_type& Q,      // 过程噪声协方差矩阵
+tuple<State, TransNoise, State> ExtendedKalmanFilter(
+    const State& old_x,         // 当前状态估计
+    const TransNoise& P,        // 状态协方差矩阵
+    const TransNoise& Q,        // 过程噪声协方差矩阵
 
-    const Z_type& now_z,            // 当前测量值
-    const H_type& H,                // 测量矩阵
-    const Meansure_Noise_type& R,   // 测量噪声协方差矩阵
+    const Meansure& now_z,      // 当前测量值
+    const MeansureTrain& H,     // 测量矩阵
+    const MeansureNoise& R,     // 测量噪声协方差矩阵
 
-    X_type (*forward_function)(const X_type&),              // 状态转移函数
-    Trans_Noise_type (*jacobian_function)(const X_type&)    // 雅可比矩阵
+    State (*forward_function)(const State&),            // 状态转移函数
+    TransNoise (*jacobian_function)(const State&)       // 雅可比矩阵
     )
 {
     // 预测
-    X_type now_predict_x = forward_function(old_x);
-    Trans_Noise_type JA = jacobian_function(old_x);
+    State now_predict_x = forward_function(old_x);
+    TransNoise JA = jacobian_function(old_x);
     
-    Trans_Noise_type now_predict_P = JA * P * JA.transpose() + Q;
+    TransNoise now_predict_P = JA * P * JA.transpose() + Q;
 
     // 更新
     Matrix<float, old_x.rows(), now_z.rows()> K;
     K = now_predict_P * H.transpose() * (H * now_predict_P * H.transpose() + R).inverse();
-    Trans_Noise_type im;
+    TransNoise im;
     im.setIdentity();
-    X_type now_x = now_predict_x + K * (now_z - H * now_predict_x);
-    Trans_Noise_type now_P = (im - K * H) * now_predict_P;
+    State now_x = now_predict_x + K * (now_z - H * now_predict_x);
+    TransNoise now_P = (im - K * H) * now_predict_P;
+
     return make_tuple(now_x, now_P, now_predict_x);
 }
 
