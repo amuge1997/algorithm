@@ -70,8 +70,8 @@ typename NewCovMat_type
 void ut(
     const State_type& old_state,     // 原状态
     const CovMat_type& old_P,        // 原状态协方差矩阵
-    NewState_type (*forward_function)(const State_type&),    // 转移函数
     StateMat_type& old_state_mat,       // 原状态样本矩阵
+    NewState_type (*forward_function)(const State_type&),    // 转移函数
     NewStateMat_type& new_state_mat,    // 新状态样本矩阵
     NewState_type& new_state_mean,      // 新状态平均值
     NewCovMat_type& new_P               // 新状态协方差矩阵
