@@ -75,8 +75,8 @@ tuple<X_type, Trans_Noise_type, X_type> UnscentedKalmanFilter(
     ut_w(dims, w);
     Matrix<float, predict_x_noise_mean.rows(), samples_nums> Sigma_x;
     Matrix<float, predict_x2z_mean.rows(), samples_nums> Sigma_z;
-    // Sigma_x = predict_x_noise_ut_sample_mat.colwise() - predict_x_noise_mean;
-    Sigma_x = predict_x_mat.colwise() - predict_x_noise_mean;
+    Sigma_x = predict_x_noise_ut_sample_mat.colwise() - predict_x_noise_mean;
+    // Sigma_x = predict_x_mat.colwise() - predict_x_noise_mean;
     Sigma_z = predict_x2z_mat.colwise() - predict_x2z_mean;
     Matrix<float, predict_x_noise_mean.rows(), predict_x2z_mean.rows()> Sigma;
     Sigma.setZero();
@@ -130,7 +130,6 @@ void run(){
         0, 0, 0, 0.00001, 0,
         0, 0, 0, 0, 0.0005
     ;
-
     
     mat2x5f H;
     H <<
