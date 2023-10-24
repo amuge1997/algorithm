@@ -230,6 +230,7 @@ void sa(float** dis_mat, float init_temp, float rate, int len, int epochs, solut
 
     int r1, r2;
     float temp, new_dist, mid;
+    // 保存初始解
     array_int_copy(&curr_solution, start_solution);
     for(int ep=0;ep<epochs;ep++){
 
@@ -240,6 +241,7 @@ void sa(float** dis_mat, float init_temp, float rate, int len, int epochs, solut
         new_solution.array[r1] = new_solution.array[r2];
         new_solution.array[r2] = mid;
 
+        // 计算总距离
         new_dist = total_distance(dis_mat, &new_solution);
 
         // 退火
@@ -249,13 +251,14 @@ void sa(float** dis_mat, float init_temp, float rate, int len, int epochs, solut
             array_int_copy(&new_solution, &curr_solution);
             curr_dist = new_dist;
         }
+        // 保存中间解
+        if(epochs / 2 == ep){
+            array_int_copy(&curr_solution, middle_solution);
+        }
+        // 保存最优解
         if(new_dist < *best_dist){
             array_int_copy(&new_solution, best_solution);
             *best_dist = new_dist;
-        }
-
-        if(epochs / 2 == ep){
-            array_int_copy(&curr_solution, middle_solution);
         }
         
     }
