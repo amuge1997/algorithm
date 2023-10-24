@@ -45,6 +45,7 @@ void read_position(const char* filename, position* pos_set, int len) {
     }
     fclose(file);
 }
+// 写入位置
 void write_position(const char *filename, position* pos_set, int len) {
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
@@ -307,6 +308,7 @@ int main(){
     // 模拟退火
     sa(dis_mat, init_temp, rate, len, epochs, &solution3, &best_dist);
 
+    // 保存结果
     save_solution("solution_start.txt", start_solution.array, len);
     save_solution("solution_middle.txt", middle_solution.array, len);
     save_solution("solution_best.txt", best_solution.array, len);
