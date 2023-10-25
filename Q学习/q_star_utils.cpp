@@ -49,6 +49,15 @@ int array_int_get_by_index(array_int* array, int index){
     return array->array[index];
 }
 
+bool is_in_array_int(array_int* array, int value){
+    for(int i=0;i<array->tail_index+1;i++){
+        if(value == array->array[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
 
 // 随机int
 int rand_int(int start, int end){
@@ -75,6 +84,16 @@ void print_float_matrix(float** arr, int rows, int cols){
 }
 
 // 打印矩阵
+void print_float_matrix_0f(float** arr, int rows, int cols){
+    for(int ri=0; ri<rows; ri++){
+        for(int ci=0; ci<cols; ci++){
+            printf("%.0f\t", arr[ri][ci]);
+        }
+        print_n();
+    }
+}
+
+// 打印矩阵
 void print_int_matrix(int** arr, int rows, int cols){
     for(int ri=0; ri<rows; ri++){
         for(int ci=0; ci<cols; ci++){
@@ -88,6 +107,16 @@ void print_int_matrix(int** arr, int rows, int cols){
 // 打印路径
 void show_route(float** Q, int start_state, int end_state, int rows, int cols){
     int state = start_state;
+
+    float max = Q[start_state][0];
+    for(int i=0;i<rows;i++){
+        if(max < Q[start_state][i]) max = Q[start_state][i];
+    }
+    if(max < 1e-5){
+        print_s("Path not found.");
+        return;
+    }
+
     print_s("Best Route");
     printf("%d", state);
     while(state != end_state){
@@ -102,6 +131,25 @@ void show_route(float** Q, int start_state, int end_state, int rows, int cols){
         }
         state = max_a;
         printf("->%d", state);
+    }
+}
+
+
+void matrix_normal(float** mat, int rows, int cols){
+    float min, max;
+    min = mat[0][0];
+    max = mat[0][0];
+    for(int ri=0;ri<rows;ri++){
+        for(int ci=0;ci<cols;ci++){
+            float val = mat[ri][ci];
+            if(val > max) max = val;
+            if(val < min) min = val;
+        }
+    }
+    for(int ri=0;ri<rows;ri++){
+        for(int ci=0;ci<cols;ci++){
+            mat[ri][ci] = (mat[ri][ci] - min) / (max - min);
+        }
     }
 }
 
