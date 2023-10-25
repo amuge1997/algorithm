@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "a_star_utils.cpp"
-#define BLOCK 1
 
 struct pair{
     int r;
@@ -61,7 +60,6 @@ void find_near_grid(
     }
     
 }
-
 
 // A星
 void a_star(
@@ -132,72 +130,6 @@ void a_star(
     }
     
 }
-
-
-// 展示路径
-void show_route(grid_list* lines){
-    if(-1 == lines->tail_index){
-        print_s("no route");
-    }else{
-        print_s("Best Route");
-        int i=lines->tail_index;
-        printf("(%d,%d)", lines->array[i]->pos.y, lines->array[i]->pos.x);
-        for(i=lines->tail_index-1;i>=0;i--){
-            printf("->(%d,%d)", lines->array[i]->pos.y, lines->array[i]->pos.x);
-        }
-    }
-    
-}
-
-
-// 绘制
-void draw_result(
-    int** the_map,
-    position start_position, 
-    position target_position,
-    grid_list* lines,
-    int rows, int cols
-){
-    for(int ri=0;ri<rows;ri++){
-        for(int ci=0;ci<cols;ci++){
-            
-            bool is_draw = false;
-            if(ri==start_position.y && ci==start_position.x){
-                printf("G ");
-                is_draw = true;
-            }
-            else if (ri==target_position.y && ci==target_position.x)
-            {
-                printf("X ");
-                is_draw = true;
-            }
-
-            for(int i=0;i<lines->tail_index+1;i++){
-                if(ri == lines->array[i]->pos.y && ci == lines->array[i]->pos.x && !is_draw){
-                    // printf("● ");
-                    printf("○ ");
-                    is_draw = true;
-                    break;
-                }
-            }
-            if(!is_draw){
-                if(BLOCK == the_map[ri][ci]){
-                    printf("■ ");
-                    // printf("□ ");
-                }
-                else{
-                    printf("  ");
-                }
-            }
-
-        }
-        print_n();
-    }
-    print_n();
-    print_n();
-
-}
-
 
 void run(){
     // 地图构建
