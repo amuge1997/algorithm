@@ -1,61 +1,5 @@
 #include <stdio.h>
-#include <math.h>
-#include "c_print.cpp"
-
-
-// 数组结构体
-struct array_int
-{
-    int* array;
-    int tail_index=-1;
-};
-
-// 数据添加元素
-void array_int_append(array_int* array, int value){
-    array->array[array->tail_index+1] = value;
-    array->tail_index++;
-}
-
-// 根据索引获取元素
-int array_int_get_by_index(array_int* array, int index){
-    return array->array[index];
-}
-
-
-// 随机int
-int rand_int(int start, int end){
-    int ret = rand()%(end-start) + start;
-    return ret;
-}
-
-// 随机float
-float rand_float(float start, float end){
-    float s = 1.*rand() / RAND_MAX;
-    float ret = (end - start) * s + start;
-    return ret;
-};
-
-
-// 打印矩阵
-void print_float_matrix(float** arr, int rows, int cols){
-    for(int ri=0; ri<rows; ri++){
-        for(int ci=0; ci<cols; ci++){
-            printf("%f ", arr[ri][ci]);
-        }
-        print_n();
-    }
-}
-
-// 打印矩阵
-void print_int_matrix(int** arr, int rows, int cols){
-    for(int ri=0; ri<rows; ri++){
-        for(int ci=0; ci<cols; ci++){
-            // printf("%f ", *(*(arr+ri)+ci));
-            printf("%d ", arr[ri][ci]);
-        }
-        print_n();
-    }
-}
+#include "q_star_utils.cpp"
 
 
 // Q学习
@@ -115,28 +59,6 @@ void q_learn(int** adj_matrix, float** returns_matrix, float** Q, int start_stat
         }
     }
 }
-
-
-// 打印路径
-void show_route(float** Q, int start_state, int end_state, int rows, int cols){
-    int state = start_state;
-    print_s("Best Route");
-    printf("%d", state);
-    while(state != end_state){
-        int max_a = 0;
-        float max_q = Q[state][max_a];
-        for(int a=1;a<cols;a++){
-            float q = Q[state][a];
-            if(max_q < Q[state][a]){
-                max_a = a;
-                max_q = q;
-            }
-        }
-        state = max_a;
-        printf("->%d", state);
-    }
-}
-
 
 
 void run(){
