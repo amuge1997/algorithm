@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <fstream>
-#include <cmath>
 #include "./eigen-3.4.0/Eigen/Dense"
 #include "nn_utils.cpp"
 
@@ -97,7 +95,7 @@ class NN{
             // 为了能全域映射,不进行激活直接线性映射得到输出. 由于输出层不进行激活,因此该网络的非线性能力不强
             // o = w2 * h               
             out = weights2 * hidden_sig_one;
-            
+
             // 误差
             // e = (Y - O)^2
             error = y - out;
