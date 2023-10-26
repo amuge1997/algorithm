@@ -143,8 +143,8 @@ int main(){
 
     int x_dims = xt.rows();
     int y_dims = yt.rows();
-    int hidden_nums = 5;
-    float lr = 1e-2;
+    int hidden_nums = 8;
+    float lr = 1e-3;
     int epochs = 1000;
     int batch = 8;
 
