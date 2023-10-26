@@ -12,7 +12,7 @@ using namespace Eigen;
 // 网络
 class NN{
     public:
-
+    
     NN(int x_dims, int y_dims, int hidden_dims, float lr, int epochs, int batch){
         this->x_dims = x_dims;              // 输入维度
         this->y_dims = y_dims;              // 输出维度
@@ -24,7 +24,8 @@ class NN{
         this->weights2.resize(y_dims, hidden_dims+1);   // 参数矩阵2
     }
 
-    MatrixXf forward(const MatrixXf& x){
+    // 预测
+    MatrixXf predict(const MatrixXf& x){
         int nums = x.cols();
         
         MatrixXf bias(1, nums);                         // 偏置向量
@@ -45,6 +46,7 @@ class NN{
         return out;
     }
 
+    // 训练
     void train(const MatrixXf& x_ori, const MatrixXf& y_ori){
         int nums = x_ori.cols();            // 样本数量
         
@@ -143,8 +145,8 @@ int main(){
     NN nn(x_dims, y_dims, hidden_nums, lr, epochs, batch);
     nn.train(xt, yt);
     
-    MatrixXf p1 = nn.forward(xt);
-    MatrixXf predict = nn.forward(x_mesh);
+    MatrixXf p1 = nn.predict(xt);
+    MatrixXf predict = nn.predict(x_mesh);
 
     savey(predict.transpose(), "y_mesh.txt");
 
