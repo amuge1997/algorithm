@@ -29,20 +29,20 @@ class NN{
         int nums = x.cols();
         
         MatrixXf bias(1, nums);                         // 偏置向量
-        MatrixXf x_one(x_dims + 1, nums);               // 添加偏置后的输入矩阵
-        MatrixXf hidden_sig_one(hidden_dims+1, nums);   // 添加偏置后的中间矩阵
+        MatrixXf x_bias(x_dims + 1, nums);               // 添加偏置后的输入矩阵
+        MatrixXf hidden_sig_bias(hidden_dims+1, nums);   // 添加偏置后的中间矩阵
 
         MatrixXf hidden;
         MatrixXf hidden_sig;
         MatrixXf out;
         
         bias.setOnes();
-        x_one << x, bias;
-        hidden = weights1 * x_one;
+        x_bias << x, bias;
+        hidden = weights1 * x_bias;
         hidden_sig = 1.0 / (1.0 + (-hidden.array()).exp());
-        hidden_sig_one << hidden_sig, bias;
+        hidden_sig_bias << hidden_sig, bias;
         
-        out = weights2 * hidden_sig_one;
+        out = weights2 * hidden_sig_bias;
         return out;
     }
 
@@ -53,8 +53,8 @@ class NN{
         MatrixXf bias(1, batch);            // 偏置向量
         MatrixXf x(x_dims, batch);          // 输入层
         MatrixXf y(y_dims, batch);          // 标签
-        MatrixXf x_one(x_dims + 1, batch);  // 输入偏置层
-        MatrixXf hidden_sig_one(hidden_dims+1, batch);  // 中间偏置层
+        MatrixXf x_bias(x_dims + 1, batch);  // 输入偏置层
+        MatrixXf hidden_sig_bias(hidden_dims+1, batch);  // 中间偏置层
 
         MatrixXf hidden;                // 中间层
         MatrixXf hidden_sig;            // sigmoid激活层
@@ -87,16 +87,16 @@ class NN{
                 y.col(i) = y_ori.col(numbers[i]);
             }
             // 添加偏置
-            x_one << x, bias;
+            x_bias << x, bias;
             
             // h = sigmoid( w1 * x )    使用sigmoid激活
-            hidden = weights1 * x_one;
+            hidden = weights1 * x_bias;
             hidden_sig = 1.0 / (1.0 + (-hidden.array()).exp());
-            hidden_sig_one << hidden_sig, bias;
+            hidden_sig_bias << hidden_sig, bias;
 
             // 为了能全域映射,不进行激活直接线性映射得到输出. 由于输出层不进行激活,因此该网络的非线性能力不强
             // o = w2 * h               
-            out = weights2 * hidden_sig_one;
+            out = weights2 * hidden_sig_bias;
 
             // 误差
             // e = (Y - O)^2
@@ -104,11 +104,11 @@ class NN{
             error2 = error.array().square().sum();
             
             // 链式法则求各矩阵梯度
-            dEdW2 = -2. * (error * hidden_sig_one.transpose()).array();
+            dEdW2 = -2. * (error * hidden_sig_bias.transpose()).array();
             dEdHsig = -2. * (weights2.transpose() * error).array();
-            dEdHone = hidden_sig_one.array() * (1.0 - hidden_sig_one.array());
+            dEdHone = hidden_sig_bias.array() * (1.0 - hidden_sig_bias.array());
             dEdH = dEdHone.topRows(dEdHone.rows()-1);
-            dEdW1 = dEdH * x_one.transpose();
+            dEdW1 = dEdH * x_bias.transpose();
             
             // 更新参数矩阵
             weights1 = weights1 - lr * dEdW1;
