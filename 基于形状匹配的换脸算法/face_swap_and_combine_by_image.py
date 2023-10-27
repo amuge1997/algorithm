@@ -1,5 +1,4 @@
-from utils import read_image, show_image
-import utils as u
+from utils import read_image
 import read_face_data
 import face_swap
 import face_combine

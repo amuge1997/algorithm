@@ -1,6 +1,5 @@
 
-import utils
-from utils import show_image, read_image, detect_only_one_face, save_image, show_matrix
+from utils import read_image, save_image
 from utils import erode, dilate
 import numpy as n
 import os
@@ -131,7 +130,6 @@ def swap(im, seg, map_function, out_im, out_seg):
         except Exception as e:
             print('ERRPR: {}'.format(e))
 
-    # out_im = blank_pad(out_im, out_im_, out_seg)
     zeros = n.array((0, 0, 0))
     seg3 = n.zeros_like(out_seg)
     for j in range(out_seg.shape[0]):
@@ -142,10 +140,6 @@ def swap(im, seg, map_function, out_im, out_seg):
     seg3 = seg3.astype('int')
 
     out_im = blank_pad_v2(out_im, out_im_, seg3)
-    # out_im_ = blank_pad_v2(out_im_, out_im_, seg3)
-    # show_image(out_im)
-    # show_image(seg3)
-    # show_image(out_im_)
 
     print()
     print('Change Complete!')
@@ -216,8 +210,6 @@ def f(patch):
             ret = (o1 + o3) / 2
             break
     ret = ret.astype('uint8')
-    # print(p1, p2, p8)
-    # exit()
     return True, ret
 
 
@@ -248,7 +240,6 @@ def blank_pad_v2(real_ground_image, blank_ground_image, seg):
                         continue
                     pix = ps[n.random.randint(0, len(ps))]
                     ret[j, i] = pix
-    # show_image(ret)
     return ret
 
 
@@ -279,18 +270,12 @@ def regress(inputs, outputs, epochs, saved_model):
 def local_compute(im, anchors, seg):
     # anchors = [[y,x], [y,x], ...]
 
-    # im_cut = im.copy()
-    # seg_cut = seg.copy()
-
-    # show_matrix(anchors)
-
     y, x = n.where(seg > 0)
     top, bottom, left, right = n.min(y), n.max(y), n.min(x), n.max(x)
     y_range = bottom - top
     x_range = right - left
 
     offset = int(0.2 * n.min((y_range, x_range)))
-    # offset = 0
 
     top_ = top - offset
     bottom_ = bottom + offset
@@ -304,9 +289,6 @@ def local_compute(im, anchors, seg):
     im_cut = im[top_:bottom_, left_:right_].copy()
     seg_cut = seg[top_:bottom_, left_:right_].copy()
 
-    # show_matrix(anchors_cut)
-
-    # show_image(im_cut)
     return im_cut, anchors_cut, seg_cut, top_, left_
 
 
@@ -315,14 +297,11 @@ def local_compute_reverse(im_cut, seg_cut, im_src, seg_src, top, left):
     y_range, x_range = im_cut.shape[:2]
 
     im = im_src.copy()
-    # show_matrix(im)
-    # show_matrix(im[top:top+y_range, left:left+x_range], im_cut)
     im[top:top+y_range, left:left+x_range] = im_cut
 
     seg = seg_src.copy()
     seg[top:top + y_range, left:left + x_range] = seg_cut
 
-    # show_image(im)
     return im, seg
 
 
@@ -344,12 +323,8 @@ def run(
         saved_model=None
         ):
 
-    # im2_src, anchors2_src, seg2_src = read_data(base_im)
-
     im1_cut, anchors1_cut, seg1_cut, top1, left1 = local_compute(im1_src, anchors1_src, seg1_src)
     im2_cut, anchors2_cut, seg2_cut, top2, left2 = local_compute(im2_src, anchors2_src, seg2_src)
-    # show_matrix(im1_cut, names='源剪切图像')
-    # print()
 
     import time
     start = time.time()
