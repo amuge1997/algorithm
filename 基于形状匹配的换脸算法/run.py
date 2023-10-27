@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     base_path = r'./伊万卡.jpg'
 
-    save_path = r'./融合结果.png'
+    save_path = r'./换脸结果.png'
 
     im = run(
         face_path=face_path,
