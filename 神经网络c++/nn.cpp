@@ -19,9 +19,6 @@ class NN{
         this->lr = lr;                      // 学习率
         this->epochs = epochs;              // 轮次
         this->batch = batch;                // 批数量
-        this->weights1.resize(hidden_dims, x_dims+1);       // 参数矩阵1
-        this->weights2.resize(hidden_dims, hidden_dims+1);  // 参数矩阵2
-        this->weights3.resize(y_dims, hidden_dims+1);       // 参数矩阵2
     }
 
     // 预测
