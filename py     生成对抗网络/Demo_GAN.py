@@ -8,7 +8,7 @@ import random
 from PIL import Image
 
 
-# 加载mnist数字数据集数据
+# 加载mnist数据集
 def load_data():
     dc = n.load('./ThinkAutoGrad2/Demo/mnist.npz')
     data_x, data_y = dc['x_train'], dc['y_train']
@@ -21,7 +21,7 @@ def load_data():
         x_ls.append(x)
     data_x = n.concatenate(x_ls)
 
-    # 取0
+    # 取数字0严格不能
     data_x = data_x[data_y == 0]
     return data_x
 
@@ -74,7 +74,7 @@ class DN(nn.Model):
 
 
 # 训练
-def train(batch, epochs, lr, save_per_epochs, continue_train=True):
+def train(batch, epochs, lr, save_per_epochs, continue_train):
     seed_size = 16      # 采样维度
     g_path = 'g.pt'     # 生成器保存路径
     d_path = 'd.pt'     # 判别器保存路径
@@ -168,7 +168,8 @@ if __name__ == '__main__':
         batch=16,
         epochs=1000,
         lr=1e-2,
-        save_per_epochs=100
+        save_per_epochs=100,
+        continue_train=True
     )
     show()
 
