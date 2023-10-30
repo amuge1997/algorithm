@@ -1,5 +1,6 @@
 
-# 自动梯度框架
+
+# 自动梯度框架  https://github.com/amuge1997/ThinkAutoGrad2_2023
 from ThinkAutoGrad2 import nn, Losses, Optimizer, Tensor, Activate, backward
 
 # 基础库
