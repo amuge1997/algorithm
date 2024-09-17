@@ -8,4 +8,5 @@ predict: 预测值
 
 fusion: 融合值
 
-![Uploading xy.png…]()
+![xy](https://github.com/user-attachments/assets/0117487b-76ac-4b9f-b434-f9e74a4b95f0)
+
