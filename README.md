@@ -1,4 +1,5 @@
-![position](https://github.com/user-attachments/assets/7e6feb29-c14c-42fd-80bd-d9ddb7d12791)# 各类算法
+# 各类算法
+![position](https://github.com/user-attachments/assets/7e6feb29-c14c-42fd-80bd-d9ddb7d12791)
 ## A星
 ![result](https://github.com/user-attachments/assets/45834899-4bd2-46e2-ac00-5b8151978c45)
 ## D星
