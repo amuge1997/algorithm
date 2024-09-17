@@ -1,5 +1,7 @@
 # 各类算法
 ## A星
+[A星](https://github.com/amuge1997/algorithm/tree/main/cpp%20%20A%E6%98%9F)
+
 ![result](https://github.com/user-attachments/assets/45834899-4bd2-46e2-ac00-5b8151978c45)
 ## D星
 ![result_4_replan](https://github.com/user-attachments/assets/09a00bb8-d8de-4a1e-93e1-6cc1a45f8641)
@@ -25,7 +27,7 @@
 ![伊万卡](https://github.com/user-attachments/assets/934ecc02-0a32-4f14-ad04-3c3f3232f1d0)
 
 ## 区域分割
-![Uploading map1_2.png…]()
+![map1_2](https://github.com/user-attachments/assets/f1723072-07c0-4649-8c1b-d1294b4c0651)
 
 ## 目标追踪
 ![output_resized](https://github.com/user-attachments/assets/7f790ed9-f777-4055-8023-23fe28f000fa)
